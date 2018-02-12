@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "grocery")
+@Table(name ="usershop_details")
 public class User implements Serializable {
 	
 	/**
@@ -31,18 +31,22 @@ public class User implements Serializable {
 	private String Contact;
 	private String Email;
 	private boolean Is_Active;
+	private boolean Shop_Count;
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "User [ID=" + ID + ", Shop_ID=" + Shop_ID + ", User_ID=" + User_ID + ", Name=" + Name + ", User_Name="
 				+ User_Name + ", User_Password=" + User_Password + ", Contact=" + Contact + ", Email=" + Email
-				+ ", Is_Active=" + Is_Active + "]";
+				+ ", Is_Active=" + Is_Active + ", Shop_Count=" + Shop_Count + "]";
 	}
 
 	
 	
 	public User() {}
-	
+
 	/**
 	 * @param iD
 	 * @param shop_ID
@@ -53,9 +57,10 @@ public class User implements Serializable {
 	 * @param contact
 	 * @param email
 	 * @param is_Active
+	 * @param shop_Count
 	 */
 	public User(int iD, String shop_ID, String user_ID, String name, String user_Name, String user_Password,
-			String contact, String email, boolean is_Active) {
+			String contact, String email, boolean is_Active, boolean shop_Count) {
 		super();
 		ID = iD;
 		Shop_ID = shop_ID;
@@ -66,9 +71,8 @@ public class User implements Serializable {
 		Contact = contact;
 		Email = email;
 		Is_Active = is_Active;
+		Shop_Count = shop_Count;
 	}
-
-
 
 
 
@@ -142,6 +146,24 @@ public class User implements Serializable {
 
 	public void setIs_Active(boolean is_Active) {
 		Is_Active = is_Active;
+	}
+
+
+
+	/**
+	 * @return the shop_Count
+	 */
+	public boolean isShop_Count() {
+		return Shop_Count;
+	}
+
+
+
+	/**
+	 * @param shop_Count the shop_Count to set
+	 */
+	public void setShop_Count(boolean shop_Count) {
+		Shop_Count = shop_Count;
 	}
 	
 	

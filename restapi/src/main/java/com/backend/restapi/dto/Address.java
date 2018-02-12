@@ -28,13 +28,13 @@ public class Address implements Serializable{
 	private String PinCode;
 	private String Area;
 	private String City;
-	private boolean Is_Active;
+	private boolean Address_Active;
 	
 	@Override
 	public String toString() {
 		return "Address [ID=" + ID + ", Shop_ID=" + Shop_ID + ", User_ID=" + User_ID + ", House_No=" + House_No
 				+ ", Locality=" + Locality + ", Landmark=" + Landmark + ", PinCode=" + PinCode + ", Area=" + Area
-				+ ", City=" + City + ", Is_Active=" + Is_Active + "]";
+				+ ", City=" + City + ", Is_Active=" + Address_Active + "]";
 	}
 	
 	public Address() {
@@ -55,7 +55,7 @@ public class Address implements Serializable{
 	 * @param is_Active
 	 */
 	public Address(int iD, String shop_ID, String user_ID, String house_No, String locality, String landmark,
-			String pinCode, String area, String city, boolean is_Active) {
+			String pinCode, String area, String city, boolean address_Active) {
 		super();
 		ID = iD;
 		Shop_ID = shop_ID;
@@ -66,7 +66,7 @@ public class Address implements Serializable{
 		PinCode = pinCode;
 		Area = area;
 		City = city;
-		Is_Active = is_Active;
+		Address_Active = address_Active;
 	}
 
 
@@ -142,12 +142,12 @@ public class Address implements Serializable{
 		City = city;
 	}
 
-	public boolean isIs_Active() {
-		return Is_Active;
+	public boolean isAddress_Active() {
+		return Address_Active;
 	}
 
-	public void setIs_Active(boolean is_Active) {
-		Is_Active = is_Active;
+	public void setIs_Active(boolean address_Active) {
+		Address_Active = address_Active;
 	}
 	
 	
