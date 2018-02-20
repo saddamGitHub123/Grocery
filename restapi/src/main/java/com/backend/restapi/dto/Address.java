@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name ="address")
 public class Address implements Serializable{
@@ -40,8 +42,8 @@ public class Address implements Serializable{
 	public Address() {
 		
 	}
-	
-	
+
+
 	/**
 	 * @param iD
 	 * @param shop_ID
@@ -52,12 +54,12 @@ public class Address implements Serializable{
 	 * @param pinCode
 	 * @param area
 	 * @param city
-	 * @param is_Active
+	 * @param address_Active
 	 */
-	public Address(int iD, String shop_ID, String user_ID, String house_No, String locality, String landmark,
+	public Address(String shop_ID, String user_ID, String house_No, String locality, String landmark,
 			String pinCode, String area, String city, boolean address_Active) {
 		super();
-		ID = iD;
+		//ID = iD;
 		Shop_ID = shop_ID;
 		User_ID = user_ID;
 		House_No = house_No;
@@ -69,7 +71,7 @@ public class Address implements Serializable{
 		Address_Active = address_Active;
 	}
 
-
+	@JsonIgnore
 	public int getID() {
 		return ID;
 	}
@@ -78,6 +80,7 @@ public class Address implements Serializable{
 		ID = iD;
 	}
 
+	@JsonIgnore
 	public String getShop_ID() {
 		return Shop_ID;
 	}
@@ -86,6 +89,7 @@ public class Address implements Serializable{
 		Shop_ID = shop_ID;
 	}
 
+	@JsonIgnore
 	public String getUser_ID() {
 		return User_ID;
 	}
@@ -142,6 +146,7 @@ public class Address implements Serializable{
 		City = city;
 	}
 
+	@JsonIgnore
 	public boolean isAddress_Active() {
 		return Address_Active;
 	}

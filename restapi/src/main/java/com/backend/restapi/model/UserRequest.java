@@ -3,14 +3,16 @@
  */
 package com.backend.restapi.model;
 
+import com.backend.restapi.common.SuccResponse;
 import com.backend.restapi.dto.Address;
 import com.backend.restapi.dto.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author Sk Saddam Hosan
  *
  */
-public class UserRequest{
+public class UserRequest extends SuccResponse{
 	
 	private String Shop_ID;
 	
@@ -31,6 +33,7 @@ public class UserRequest{
 		this.userAddress = userAddress;
 	}
 	
+	//@JsonIgnore
 	public String getShop_ID() {
 		return Shop_ID;
 	}

@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name ="usershop_details")
 public class User implements Serializable {
@@ -76,6 +78,7 @@ public class User implements Serializable {
 
 
 
+	@JsonIgnore
 	public int getID() {
 		return ID;
 	}
@@ -140,6 +143,7 @@ public class User implements Serializable {
 		Email = email;
 	}
 
+	@JsonIgnore
 	public boolean isIs_Active() {
 		return Is_Active;
 	}
@@ -153,6 +157,7 @@ public class User implements Serializable {
 	/**
 	 * @return the shop_Count
 	 */
+	@JsonIgnore
 	public boolean isShop_Count() {
 		return Shop_Count;
 	}

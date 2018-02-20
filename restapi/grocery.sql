@@ -13,7 +13,7 @@ CREATE TABLE `usershop_details` (
   `Shop_Count` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT UC_usershop_details UNIQUE (User_Name,Phn_Number,Email)
-) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 INSERT INTO `grocery`.`usershop_details` ( `Shop_ID`, `User_ID`, `Name`, `User_Name`, `User_Password`, `Phn_Number`, `Email`, `Is_Active`, `Shop_Count`) 
 VALUES ( 'Shop_0', 'User_0', 'Sadddam', 'saddam1', '12345678', '7204414827', 'sksddmhosan@gmail.com', '1', '1');
 
@@ -39,7 +39,7 @@ CREATE TABLE `address` (
   CONSTRAINT FK_UserAddress FOREIGN KEY (ID)
     REFERENCES usershop_details(ID)
      
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 INSERT INTO `grocery`.`address` (`ID`, `Shop_ID`, `User_ID`, `House_No`, `Locality`, `Landmark`, `PinCode`, `Area`, `City`, `Address_Active`)
 VALUES ( 'Shop_0', 'User_0', '#23', 'SGR', 'SGR Dental', '560037', 'Bangalore', 'Bangalore', '1');

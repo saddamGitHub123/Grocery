@@ -76,36 +76,14 @@ public class UserAddress {
 	
 
 	//Adding Shopkeeper
-	
 
-
-	/**
-	 * @param shop_ID
-	 * @param user_ID
-	 * @param name
-	 * @param user_Name
-	 * @param user_Password
-	 * @param contact
-	 * @param email
-	 * @param is_Active
-	 * @param shop_Count
-	 * @param shopID
-	 * @param userID
-	 * @param house_No
-	 * @param locality
-	 * @param landmark
-	 * @param pinCode
-	 * @param area
-	 * @param city
-	 * @param address_Active
-	 */
-	public UserAddress(String shop_ID,  String name, String user_Name, String user_Password,
-			String contact, String email, boolean is_Active, boolean shop_Count, String shopID, 
+	public UserAddress(String shop_ID, String user_ID, String name, String user_Name, String user_Password,
+			String contact, String email, boolean is_Active, boolean shop_Count, String shopID,String  userID,
 			String house_No, String locality, String landmark, String pinCode, String area, String city,
 			boolean address_Active) {
 		super();
 		Shop_ID = shop_ID;
-		//User_ID = user_ID;
+		User_ID = user_ID;
 		Name = name;
 		User_Name = user_Name;
 		User_Password = user_Password;
@@ -114,7 +92,7 @@ public class UserAddress {
 		Is_Active = is_Active;
 		Shop_Count = shop_Count;
 		ShopID = shopID;
-		//UserID = userID;
+		UserID = userID;
 		House_No = house_No;
 		Locality = locality;
 		Landmark = landmark;
@@ -124,6 +102,30 @@ public class UserAddress {
 		Address_Active = address_Active;
 	}
 
+
+
+
+
+	/**
+	 * 
+	 */
+	public UserAddress(String shop_ID, String user_ID, String name, String user_Name, String user_Password,
+			String contact, String email, boolean is_Active, boolean shop_Count, String shopID, String userID,
+			boolean address_Active) {
+		super();
+		Shop_ID = shop_ID;
+		User_ID = user_ID;
+		Name = name;
+		User_Name = user_Name;
+		User_Password = user_Password;
+		Contact = contact;
+		Email = email;
+		Is_Active = is_Active;
+		Shop_Count = shop_Count;
+		ShopID = shopID;
+		UserID = userID;
+		Address_Active = address_Active;
+	}
 
 
 

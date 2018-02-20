@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.backend.restapi.dto.User1;
 import com.backend.restapi.dto.UserAddress;
+import com.backend.restapi.model.UpdateUserShopRequest;
+import com.backend.restapi.model.UpdateUserShopResponse;
 import com.backend.restapi.model.UserRequest;
 
 
@@ -28,9 +30,13 @@ public interface UserDAO {
 	  * **/
 	 boolean addShop(UserRequest userRequest);
 	
+	/**
+	 * Update user and shopkeeper update 
+	 * 
+	 * **/
 	
-	
-	
+	 UpdateUserShopResponse updateUserShop(UpdateUserShopRequest updateRequest);
+	// Address updateUserShop(UpdateUserShopRequest updateRequest);
 	
 
 	boolean register(User1 user);
