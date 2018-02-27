@@ -1,9 +1,10 @@
 /**
  * 
  */
-package com.backend.restapi.model;
+package com.backend.restapi.user.model;
 
 import com.backend.restapi.common.SuccResponse;
+import com.backend.restapi.user.dto.User_Data;
 
 /**
  * @author Sk Saddam Hosan
@@ -13,7 +14,10 @@ public class UpdateUserShopResponse extends SuccResponse {
 	
 	User_Data userData;
 	
-	
+	public UpdateUserShopResponse() {
+
+	}
+
 	
 
 	/**

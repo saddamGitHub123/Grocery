@@ -2,11 +2,13 @@ package com.backend.restapi.dao;
 
 import java.util.List;
 
-import com.backend.restapi.dto.User1;
-import com.backend.restapi.dto.UserAddress;
-import com.backend.restapi.model.UpdateUserShopRequest;
-import com.backend.restapi.model.UpdateUserShopResponse;
-import com.backend.restapi.model.UserRequest;
+import com.backend.restapi.user.dto.User1;
+import com.backend.restapi.user.dto.UserAddress;
+import com.backend.restapi.user.dto.User_Data;
+import com.backend.restapi.user.model.UpdateRequest;
+import com.backend.restapi.user.model.UpdateUserShopRequest;
+import com.backend.restapi.user.model.UpdateUserShopResponse;
+import com.backend.restapi.user.model.UserRequest;
 
 
 /**
@@ -52,5 +54,20 @@ public interface UserDAO {
 	//Show list of user
 	
 	List<UserAddress> listOfUser(UserRequest userRequest);
+	
+	
+	
+	/**
+	 * For only one user details 
+	 * **/
+	
+	User_Data userDetailByShopIdAndUserId(UpdateRequest updateRequest);
+	
+	
+	/**
+	 * Getting all user details using shopID
+	 * ***/
+	
+	List<User_Data> userDetailsByShopID(UpdateRequest updateRequest);
 	
 }

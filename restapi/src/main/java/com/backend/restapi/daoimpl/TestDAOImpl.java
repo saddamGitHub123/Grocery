@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.restapi.dao.TestDAO;
-import com.backend.restapi.dto.Test;
+import com.backend.restapi.user.dto.Test;
 
 /**
  * @author Sk Saddam Hosan

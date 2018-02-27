@@ -15,8 +15,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.backend.restapi.dao.TestDAO;
 import com.backend.restapi.dao.UserDAO;
-import com.backend.restapi.dto.Test;
-import com.backend.restapi.dto.User1;
+import com.backend.restapi.user.dto.Test;
+import com.backend.restapi.user.dto.User1;
 
 @Controller
 @EnableWebMvc

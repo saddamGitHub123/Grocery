@@ -1,4 +1,4 @@
-package com.backend.restapi.dto;
+package com.backend.restapi.user.dto;
 
 import java.io.Serializable;
 

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.restapi.dao.LoginDAO;
-import com.backend.restapi.dto.User;
+import com.backend.restapi.user.dto.User;
 
 /**
  * @author Sk Saddam Hosan

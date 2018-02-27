@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.backend.restapi.dao.LoginDAO;
-import com.backend.restapi.dto.User;
-import com.backend.restapi.model.LoginResponse;
+import com.backend.restapi.user.dto.User;
+import com.backend.restapi.user.model.LoginResponse;
 
 /**
  * @author Sk Saddam Hosan

@@ -2,6 +2,8 @@ package com.backend.restapi.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +15,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.backend.restapi.common.ApiErrors;
+import com.backend.restapi.common.JsonResponse;
 import com.backend.restapi.dao.UserDAO;
-import com.backend.restapi.dto.Address;
-import com.backend.restapi.dto.User;
-import com.backend.restapi.dto.UserAddress;
-import com.backend.restapi.model.UpdateUserShopRequest;
-import com.backend.restapi.model.UpdateUserShopResponse;
-import com.backend.restapi.model.UserRequest;
+import com.backend.restapi.user.dto.Address;
+import com.backend.restapi.user.dto.User;
+import com.backend.restapi.user.dto.UserAddress;
+import com.backend.restapi.user.dto.User_Data;
+import com.backend.restapi.user.model.UpdateRequest;
+import com.backend.restapi.user.model.UpdateResponse;
+import com.backend.restapi.user.model.UpdateUserShopRequest;
+import com.backend.restapi.user.model.UpdateUserShopResponse;
+import com.backend.restapi.user.model.UserDetailsResponse;
+import com.backend.restapi.user.model.UserRequest;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @Controller
@@ -188,7 +196,7 @@ public class UserController {
 		try {
 			//UpdateUserShopResponse updateUser = null;
 			//User user = updateRequest.getUserDetails();
-		//	Address address = updateRequest.getUserAddress();
+		   //Address address = updateRequest.getUserAddress();
 			
 			UpdateUserShopResponse updateUser = userDAO.updateUserShop(updateRequest);
 			
@@ -199,11 +207,8 @@ public class UserController {
 			updateUser.setStatus_code("200");
 			updateUser.setStatus_message("successfully update user");
 			return updateUser;
-			}else {
-				updateUser.setStatus_code("400");
-				updateUser.setStatus_message("shopkeeper or User are not found");
-				return updateUser;
 			}
+			return updateUser;
 			
 		}catch (RuntimeException re)
 		{
@@ -219,4 +224,90 @@ public class UserController {
 		
 	    }
 		}
+	
+	
+	
+
+	/**
+	 * API Get a user details usig userid and shopid
+	 */
+
+	@RequestMapping(value = "/details/shopid/userid", method = RequestMethod.POST)
+	public @ResponseBody UpdateResponse getUserDetails(@RequestBody UpdateRequest updateRequest,
+			HttpServletRequest request) {
+
+		logger.info("Entered getUserDetails()  - one user details ");
+		UpdateResponse updateResponse = new UpdateResponse();
+		try {
+
+			User_Data user = userDAO.userDetailByShopIdAndUserId(updateRequest);
+
+			if (user.getShop_ID() == null || user.getUser_ID() == null) {
+
+				updateResponse.setStatus_code(JsonResponse.CODE__EMPTY);
+				updateResponse.setStatus_message("shopid and userid is empty");
+				// updateResponse.setRequest_Type("Product Is Not Exist ");
+				// allProduct.setProductData(updateData);
+				return updateResponse;
+			} else {
+				updateResponse.setStatus_code(JsonResponse.CODE__OK);
+				updateResponse.setStatus_message("Successfully Authenticated");
+				updateResponse.setUserData(user);
+				logger.info("Returning updateUserList and Address");
+				return updateResponse;
+			}
+		} catch (Exception e) {
+			logger.error("listOfProductByShopId(): Error - " + e);
+			updateResponse.setStatus_code(JsonResponse.CODE__EMPTY);
+			updateResponse.setStatus_message("Something wrong!! userDetailByShopIdAndUserId() in userDAOImpl");
+			return updateResponse;
+		}
+
+	}
+	
+	
+	/**
+	 * Get All user list using shopID
+	 */
+
+	@RequestMapping(value = "/details/shopid", method = RequestMethod.POST)
+	public @ResponseBody UserDetailsResponse getAllUserDetailsByShopId(@RequestBody UpdateRequest updateRequest,
+			HttpServletRequest request) {
+
+		logger.info("Entered getUserDetails()  - one user details ");
+
+		// String shopid = updateRequest.getShop_ID();
+		UserDetailsResponse updateResponse = new UserDetailsResponse();
+
+		try {
+
+			List<User_Data> user = userDAO.userDetailsByShopID(updateRequest);
+
+			if (user.isEmpty()) {
+
+				updateResponse.setStatus_code(JsonResponse.CODE__EMPTY);
+				updateResponse.setStatus_message(ApiErrors.ERROR__NO_USER_EXIST);
+				// updateResponse.setRequest_Type("Product Is Not Exist ");
+				// allProduct.setProductData(updateData);
+				return updateResponse;
+			}
+
+			updateResponse.setStatus_code(JsonResponse.CODE__OK);
+			updateResponse.setStatus_message("Successfully Authenticated");
+			updateResponse.setUserData(user);
+			logger.info("Returning updateUserList and Address");
+			return updateResponse;
+		} catch (Exception e) {
+			logger.error("listOfProductByShopId(): Error - " + e);
+			updateResponse.setStatus_code(JsonResponse.CODE__UNKNOWN_ERROR);
+			updateResponse.setStatus_message(JsonResponse.CODE__ERROR);
+			return updateResponse;
+		}
+	}
+
+	
+	
+	
+	
+	
 }

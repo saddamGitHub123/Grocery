@@ -1,11 +1,11 @@
 /**
  * 
  */
-package com.backend.restapi.model;
+package com.backend.restapi.user.model;
 
 import javax.persistence.Column;
 
-import com.backend.restapi.dto.Address;
+import com.backend.restapi.user.dto.Address;
 
 /**
  * @author Sk Saddam Hosan

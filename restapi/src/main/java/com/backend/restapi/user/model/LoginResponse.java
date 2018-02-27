@@ -1,10 +1,10 @@
 /**
  * 
  */
-package com.backend.restapi.model;
+package com.backend.restapi.user.model;
 
 import com.backend.restapi.common.SuccResponse;
-import com.backend.restapi.dto.User;
+import com.backend.restapi.user.dto.User;
 
 /**
  * @author Sk Saddam Hosan

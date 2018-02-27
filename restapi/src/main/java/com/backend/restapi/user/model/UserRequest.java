@@ -1,11 +1,11 @@
 /**
  * 
  */
-package com.backend.restapi.model;
+package com.backend.restapi.user.model;
 
 import com.backend.restapi.common.SuccResponse;
-import com.backend.restapi.dto.Address;
-import com.backend.restapi.dto.User;
+import com.backend.restapi.user.dto.Address;
+import com.backend.restapi.user.dto.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**

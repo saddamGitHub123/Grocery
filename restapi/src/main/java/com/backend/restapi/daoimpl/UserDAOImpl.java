@@ -2,6 +2,7 @@ package com.backend.restapi.daoimpl;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -12,14 +13,15 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.restapi.dao.UserDAO;
-import com.backend.restapi.dto.Address;
-import com.backend.restapi.dto.User;
-import com.backend.restapi.dto.User1;
-import com.backend.restapi.dto.UserAddress;
-import com.backend.restapi.model.UpdateUserShopRequest;
-import com.backend.restapi.model.UpdateUserShopResponse;
-import com.backend.restapi.model.UserRequest;
-import com.backend.restapi.model.User_Data;
+import com.backend.restapi.user.dto.Address;
+import com.backend.restapi.user.dto.User;
+import com.backend.restapi.user.dto.User1;
+import com.backend.restapi.user.dto.UserAddress;
+import com.backend.restapi.user.dto.User_Data;
+import com.backend.restapi.user.model.UpdateRequest;
+import com.backend.restapi.user.model.UpdateUserShopRequest;
+import com.backend.restapi.user.model.UpdateUserShopResponse;
+import com.backend.restapi.user.model.UserRequest;
 
 
 
@@ -251,6 +253,7 @@ public class UserDAOImpl implements UserDAO {
 			String Shop_ID = updateRequest.getShop_ID();
 			UserAddress userAddress = null ;
 			UpdateUserShopResponse userResponse = null;
+			//User_Data userData = updateRequest.getUserData();
 			User_Data userData = updateRequest.getUserData();
 			Address address = userData.getUserAddress();
 			
@@ -300,7 +303,7 @@ public class UserDAOImpl implements UserDAO {
 				 sessionFactory.openSession().beginTransaction().commit();
 				 
 				//System.out.println(list);
-				 userResponse = new UpdateUserShopResponse(userData);
+				// userResponse = new UpdateUserShopResponse(userData);
 				 
 				return userResponse;
 				}
@@ -375,10 +378,162 @@ public class UserDAOImpl implements UserDAO {
 
 
 
+	/**
+	 * getting a users details using Shopid and UserID
+	 * **/
+
+
+@Override
+public User_Data userDetailByShopIdAndUserId(UpdateRequest updateRequest) {
+
+	
+	
+	
+	
+	try{
+				
+	    log.debug("showing one user details usign user id and shopid");
+        
+	    String Shop_ID = updateRequest.getShop_ID();
+	    String User_ID = updateRequest.getUser_ID();		
+		User_Data userData = new User_Data();
+
+		
+		// select the list of a user data usign shopid and user id in user table
+					String selectProductsByShopId = "FROM User_Data WHERE Shop_ID = :Shop_ID AND User_ID = :User_ID";
+					List<User_Data> list = sessionFactory.getCurrentSession()
+							.createQuery(selectProductsByShopId, User_Data.class).setParameter("Shop_ID", Shop_ID)
+							.setParameter("User_ID", User_ID).getResultList();
+		
+		// checking the null value of the user table list
+		if ((list != null) && (list.size() > 0)) {
+			// userFound= true;
+			log.debug("get successful,User details is found");
+
+			userData = list.get(0);
+			
+			Address address = new Address();
+			String selectAddressByuserId = "FROM Address WHERE  User_ID = :User_ID";
+			List<Address> addressList = sessionFactory.getCurrentSession()
+					.createQuery(selectAddressByuserId, Address.class).setParameter("User_ID", User_ID)
+					.getResultList();
+
+			if ((addressList != null) && (addressList.size() > 0)) {
+				// userFound= true;
+				log.debug("get successful,Adress details is found");
+
+				address = addressList.get(0);
+				userData.setUserAddress(address);
+
+				return userData;
+			}
+		}
+
+		return userData;
+	}catch (RuntimeException re)
+	{
+		log.error("get failed", re);
+		throw re;
+	}
+	finally
+	{
+		/*if (sessionFactory != null)
+		{
+			sessionFactory.close();
+		}*/
+	
+    }
+
+}
 
 
 
+/**
+ * Getting all user Details in a list using shopID from user and address table 
+ * **/
+	@Override
+	public List<User_Data> userDetailsByShopID(UpdateRequest updateRequest) {
 
+		try{
+			
+		    log.debug("Entering userDAOImpl class - in userDetailsByShopID()");
+	        //int count = 0;
+	        //getting shopID from user
+		    String Shop_ID = updateRequest.getShop_ID();		
+			User_Data userData = new User_Data();
+			
+			// User_Data list of array content all userList
+			List<User_Data> userList = new ArrayList();
+
+			
+			// select the list of a user data using shopID in user table
+						String selectUserDetailsByShopId = "FROM User_Data WHERE Shop_ID = :Shop_ID AND is_active =:is_active";
+						List<User_Data> list = sessionFactory.getCurrentSession()
+								.createQuery(selectUserDetailsByShopId, User_Data.class)
+								.setParameter("Shop_ID", Shop_ID)
+								.setParameter("is_active", true)
+								.getResultList();
+		
+			// checking the null value of the user table list
+			if ((list != null) && (list.size() > 0)) {
+				log.debug("get successful,User details ShopID is found");
+				
+				//counting for one by one userList
+			//	for (User_Data entity : list) {
+				for( int count= 0; count<list.size();count++) {
+					
+					if(list.get(count).getUser_ID() != null) {
+					userData = list.get(count);
+					
+					String User_ID = userData.getUser_ID();
+					Address address = new Address();
+					String selectAddressByuserId = "FROM Address WHERE  User_ID = :User_ID";
+					List<Address> addressList = sessionFactory.getCurrentSession()
+							.createQuery(selectAddressByuserId, Address.class).setParameter("User_ID", User_ID)
+							.getResultList();
+					
+					//Checking the addressList Empty or not
+					if ((addressList != null) && (addressList.size() > 0)) {
+						log.debug("get successful,Adress details is found");
+
+						address = addressList.get(0);
+						//Set the particular address in ther user
+						userData.setUserAddress(address);
+						
+						//Add the all object to array list
+						userList.add(userData);
+					}
+					else {
+						address = null;
+						//Set the particular address in ther user
+						userData.setUserAddress(address);
+						
+						//Add the all object to array list
+						userList.add(userData);
+					}
+					
+				}
+				}
+				
+				return userList;
+				
+			}
+
+			return userList;
+		}catch (RuntimeException re)
+		{
+			log.error("All UserList failed", re);
+			throw re;
+		}
+		finally
+		{
+			/*if (sessionFactory != null)
+			{
+				sessionFactory.close();
+			}*/
+		
+	    }
+	}
 
 
 

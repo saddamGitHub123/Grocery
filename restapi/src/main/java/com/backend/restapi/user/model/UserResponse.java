@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.backend.restapi.model;
+package com.backend.restapi.user.model;
 
 /**
  * @author Sk Saddam Hosan

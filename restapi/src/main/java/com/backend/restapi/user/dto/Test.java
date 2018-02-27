@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.backend.restapi.dto;
+package com.backend.restapi.user.dto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
