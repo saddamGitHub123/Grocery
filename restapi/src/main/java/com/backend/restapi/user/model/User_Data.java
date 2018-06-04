@@ -3,7 +3,7 @@
  */
 package com.backend.restapi.user.model;
 
-import javax.persistence.Column;
+
 
 import com.backend.restapi.user.dto.Address;
 

@@ -8,7 +8,7 @@
   <name>restapi Maven Webapp</name>
   <url>http://maven.apache.org</url>
   
-   <properties>
+    <properties>
 		<javaee.version>7.0</javaee.version>
 		<spring.version>4.3.6.RELEASE</spring.version>
 		<hibernate.version>5.2.7.Final</hibernate.version>
@@ -115,6 +115,13 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
+		
+		<!-- push notification to firebase -->
+		<dependency>
+			<groupId>com.ganyo</groupId>
+			<artifactId>gcm-server</artifactId>
+			<version>1.0.2</version>
+		</dependency>
 
 		<!-- Database connection Pooling -->
 		<dependency>
@@ -129,6 +136,20 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+<!-- gson used in push notification model class-->
+<dependency>
+	<groupId>com.google.code.gson</groupId>
+	<artifactId>gson</artifactId>
+	<version>2.3</version>
+</dependency>
+
+<!-- For httpClient in push notification model class -->
+<dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.5.2</version>
+</dependency>
 
 
 		<!-- Jackson -->

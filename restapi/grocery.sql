@@ -81,7 +81,23 @@ CREATE TABLE product_prices (
 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-
+DROP TABLE IF EXISTS `orderList`;
+CREATE TABLE `orderList` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Shop_ID` varchar(20) NOT NULL,
+  `User_ID` VARCHAR (20) NOT NULL,
+  `Product_ID` varchar(40) NOT NULL,
+  `Product_Name` varchar(40) DEFAULT NULL,
+  `Order_ID` varchar(200) NOT NULL,
+  `Units`   VARCHAR(20) NOT NULL,
+  `Qty` VARCHAR(10) NOT NULL,
+  `TimeStamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Price` VARCHAR(200) NOT NULL,
+  `Dispatch` tinyint(1) DEFAULT NULL,
+  `Total_Amount` double DEFAULT NULL,
+  `Order_Active` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
 

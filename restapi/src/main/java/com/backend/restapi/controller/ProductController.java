@@ -4,12 +4,18 @@
 package com.backend.restapi.controller;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -99,7 +105,7 @@ public class ProductController {
 
 					allProduct.setProductData(productData);
 					allProduct.setStatus_code(JsonResponse.CODE__OK);
-					allProduct.setStatus_message("Successfully Authenticated");
+					allProduct.setStatus_message(ApiErrors.SUCCESS__AUTHENTICATED);
 					allProduct.setRequest_Type("Add_First_Product");
 					logger.info("Returning listOfProductByShopId()");
 					return allProduct;
@@ -107,8 +113,8 @@ public class ProductController {
 
 					productData = null;
 					allProduct.setProductData(productData);
-					allProduct.setStatus_code("400");
-					allProduct.setStatus_message("Data is not save");
+					allProduct.setStatus_code(JsonResponse.CODE__EMPTY);
+					allProduct.setStatus_message(ApiErrors.ERROR__DATA__NOT_SAVE);
 					return allProduct;
 				}
 			} else {
@@ -123,7 +129,7 @@ public class ProductController {
 
 					allProduct.setProductData(productData);
 					allProduct.setStatus_code(JsonResponse.CODE__OK);
-					allProduct.setStatus_message("Successfully Authenticated");
+					allProduct.setStatus_message(ApiErrors.SUCCESS__AUTHENTICATED);
 					allProduct.setRequest_Type("Add_New_Product");
 					logger.info("Returning listOfProductByShopId()");
 					return allProduct;
@@ -131,15 +137,15 @@ public class ProductController {
 
 					productData = null;
 					allProduct.setProductData(productData);
-					allProduct.setStatus_code("400");
-					allProduct.setStatus_message("Data is not save");
+					allProduct.setStatus_code(JsonResponse.CODE__EMPTY);
+					allProduct.setStatus_message(ApiErrors.ERROR__DATA__NOT_SAVE);
 					return allProduct;
 				}
 			}
 
 		} catch (Exception e) {
 			logger.error("listOfProductByShopId(): Error - " + e);
-			allProduct.setStatus_code(JsonResponse.CODE__EXCEPTION);
+			allProduct.setStatus_code(JsonResponse.CODE__EMPTY);
 			allProduct.setStatus_message(JsonResponse.CODE__UNKNOWN_ERROR);
 			return allProduct;
 		}
@@ -291,6 +297,65 @@ public class ProductController {
 		}
 
 	}
+	
+	/***
+	 * for tesing that push notification working or not 
+	 * 
+	 * ***/
+	
+	@RequestMapping(value = "/fcmNotification", method = RequestMethod.GET)
+	public String sendTest() {
+		logger.info("Entered getUserDetails()  - one user details ");
+		
+		System.out.println(addNewProductNotificatiopn());
+		
+		logger.info(" value is comming ");
+		
+		return "value is cmming";
+	}
+	
+	
+	
+	/**
+	 * This is the add new product push notification 
+	 * 
+	 * */
+	public ResponseEntity<String> addNewProductNotificatiopn() {
+		
+		final String TOPIC = "JavaSampleApproach";
+		JSONObject body = new JSONObject();
+		body.put("to", "/topics/" + TOPIC);
+		body.put("priority", "high");
+
+		JSONObject notification = new JSONObject();
+		notification.put("title", "JSA Notification");
+		notification.put("body", "Happy Message!");
+		
+		JSONObject data = new JSONObject();
+		data.put("Key-1", "JSA Data 1");
+		data.put("Key-2", "JSA Data 2");
+
+		body.put("notification", notification);
+		body.put("data", data);
+
+		HttpEntity<String> request = new HttpEntity<>(body.toString());
+
+		CompletableFuture<String> pushNotification = userDAO.send(request);
+		CompletableFuture.allOf(pushNotification).join();
+
+		try {
+			String firebaseResponse = pushNotification.get();
+			
+			return new ResponseEntity<>(firebaseResponse, HttpStatus.OK);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<>("Push Notification ERROR!", HttpStatus.BAD_REQUEST);
+	}
+
 	
 
 }

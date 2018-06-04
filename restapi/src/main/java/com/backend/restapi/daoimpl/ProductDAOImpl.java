@@ -5,19 +5,24 @@ package com.backend.restapi.daoimpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import com.backend.restapi.dao.ProductDAO;
 import com.backend.restapi.product.dto.Price;
 import com.backend.restapi.product.dto.Product;
 import com.backend.restapi.product.model.Product_Model;
 import com.backend.restapi.product.model.UniqueProduct;
+import com.backend.restapi.user.dto.HeaderRequestInterceptor;
 
 /**
  * @author Sk Saddam Hosan
@@ -316,6 +321,7 @@ private static final Logger log = LoggerFactory.getLogger(ProductDAOImpl.class);
 		try{
 			
 			//Get all product list using shop_id
+			   //String selectProductsByShopId = "FROM Product WHERE Shop_ID = :Shop_ID Group By Product_Name";
 			String selectProductsByShopId = "FROM Product WHERE Shop_ID = :Shop_ID ";
 			
 			List <Product> listProduct = sessionFactory
@@ -508,6 +514,33 @@ private static final Logger log = LoggerFactory.getLogger(ProductDAOImpl.class);
 		}
 	}
 	
+	
+	
+	
+	
+
+/* (non-Javadoc)
+ * @see com.backend.restapi.dao.UserDAO#send(org.springframework.http.HttpEntity)
+ * This for pus notification implement 
+ * FIREBASE_SERVER_KEY you have to create into firebase official site 
+ * create firebase project and generate  Firebase server key 
+ */
+	@Override
+	public CompletableFuture<String> send(HttpEntity<String> entity) {
+		
+		String FIREBASE_SERVER_KEY = "AIzaSyAuS9vJADBUEWM_pAQcgPDGR_GcNWP2knw"; // You FCM AUTH key
+		String FIREBASE_API_URL = "https://fcm.googleapis.com/fcm/send"; 
+		RestTemplate restTemplate = new RestTemplate();
+
+		ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+		interceptors.add(new HeaderRequestInterceptor("Authorization", "key=" + FIREBASE_SERVER_KEY));
+		interceptors.add(new HeaderRequestInterceptor("Content-Type", "application/json"));
+		restTemplate.setInterceptors(interceptors);
+
+		String firebaseResponse = restTemplate.postForObject(FIREBASE_API_URL, entity, String.class);
+
+		return CompletableFuture.completedFuture(firebaseResponse);
+	}
 	
 
 }

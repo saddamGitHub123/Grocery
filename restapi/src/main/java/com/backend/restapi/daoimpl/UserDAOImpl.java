@@ -4,16 +4,22 @@ package com.backend.restapi.daoimpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import com.backend.restapi.dao.UserDAO;
 import com.backend.restapi.user.dto.Address;
+import com.backend.restapi.user.dto.HeaderRequestInterceptor;
+import com.backend.restapi.user.dto.Pushnotification;
 import com.backend.restapi.user.dto.User;
 import com.backend.restapi.user.dto.User1;
 import com.backend.restapi.user.dto.UserAddress;
@@ -51,7 +57,7 @@ public class UserDAOImpl implements UserDAO {
 	 * create method for getting list of shopID 
 	 */
 	@Override
-	public List<UserAddress> listOfShop(UserRequest userRequest) {
+	public List<User> listOfShop(UserRequest userRequest) {
 		
 	
 		log.debug("Inserting UserDAOImpl class of listOfShop() method");
@@ -59,8 +65,8 @@ public class UserDAOImpl implements UserDAO {
 		try {
 
 			if (userRequest.getShop_ID() == null || userRequest.getShop_ID().isEmpty()) {
-				String uniqueShopID = "from UserAddress where Shop_Count = :Shop_Count GROUP BY Shop_ID ";
-				List<UserAddress> list = sessionFactory.getCurrentSession().createQuery(uniqueShopID, UserAddress.class)
+				String uniqueShopID = "from User where Shop_Count = :Shop_Count GROUP BY Shop_ID ";
+				List<User> list = sessionFactory.getCurrentSession().createQuery(uniqueShopID, User.class)
 						// .setParameter("Shop_ID", Shop_ID)
 						.setParameter("Shop_Count", true).getResultList();
 				System.out.println(list.size());
@@ -80,10 +86,10 @@ public class UserDAOImpl implements UserDAO {
 				   log.debug("List all the user using shopId");	
 				   
 				   String Shop_ID = userRequest.getShop_ID();
-		            String selectProductsByShopId = "FROM UserAddress WHERE Shop_ID = :Shop_ID ";
-		            List<UserAddress> list= sessionFactory
+		            String selectProductsByShopId = "FROM User WHERE Shop_ID = :Shop_ID ";
+		            List<User> list= sessionFactory
 							.getCurrentSession()
-							.createQuery(selectProductsByShopId, UserAddress.class)
+							.createQuery(selectProductsByShopId, User.class)
 								.setParameter("Shop_ID", Shop_ID)
 								//.setParameter("active", true)
 									.getResultList();
@@ -497,7 +503,7 @@ public User_Data userDetailByShopIdAndUserId(UpdateRequest updateRequest) {
 						log.debug("get successful,Adress details is found");
 
 						address = addressList.get(0);
-						//Set the particular address in ther user
+						//Set the particular address in their user
 						userData.setUserAddress(address);
 						
 						//Add the all object to array list
@@ -505,7 +511,7 @@ public User_Data userDetailByShopIdAndUserId(UpdateRequest updateRequest) {
 					}
 					else {
 						address = null;
-						//Set the particular address in ther user
+						//Set the particular address in their user
 						userData.setUserAddress(address);
 						
 						//Add the all object to array list
@@ -533,6 +539,92 @@ public User_Data userDetailByShopIdAndUserId(UpdateRequest updateRequest) {
 			}*/
 		
 	    }
+	}
+
+
+
+/* (non-Javadoc)
+ * @see com.backend.restapi.dao.UserDAO#send(org.springframework.http.HttpEntity)
+ * This for pus notification implement 
+ * FIREBASE_SERVER_KEY you have to create into firebase official site 
+ * create firebase project and generate  Firebase server key 
+ */
+	@Override
+	public CompletableFuture<String> send(HttpEntity<String> entity) {
+		
+		String FIREBASE_SERVER_KEY = "AIzaSyAuS9vJADBUEWM_pAQcgPDGR_GcNWP2knw"; // You FCM AUTH key
+		String FIREBASE_API_URL = "https://fcm.googleapis.com/fcm/send"; 
+		RestTemplate restTemplate = new RestTemplate();
+
+		ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+		interceptors.add(new HeaderRequestInterceptor("Authorization", "key=" + FIREBASE_SERVER_KEY));
+		interceptors.add(new HeaderRequestInterceptor("Content-Type", "application/json"));
+		restTemplate.setInterceptors(interceptors);
+
+		String firebaseResponse = restTemplate.postForObject(FIREBASE_API_URL, entity, String.class);
+
+		return CompletableFuture.completedFuture(firebaseResponse);
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see com.backend.restapi.dao.UserDAO#saveDeviceID(com.backend.restapi.user.dto.Pushnotification)
+	 * 
+	 * This is the saveDeviceID implement method in UserDAOImpl class 
+	 * Save the Device_ID using Shop_ID
+	 * 
+	 */
+	@Override
+	public boolean saveDeviceID(Pushnotification pushNotification) {
+		
+		log.debug(" Enterring the UserDAOImpl class in saveDeviceID() method ");
+		try {
+			Pushnotification pushNotificationUpdate = null;
+			String Shop_ID = pushNotification.getShop_ID();
+			boolean Is_Active = true;
+			
+			/* Check the Shop_ID is already in table or not 
+			 * get list of the device_id
+			 * */			
+			String shopIDQuery = "FROM Pushnotification WHERE  Shop_ID = :Shop_ID AND Is_Active= :Is_Active";
+			List<Pushnotification> deviceIdList = sessionFactory.getCurrentSession()
+					.createQuery(shopIDQuery, Pushnotification.class)
+					.setParameter("Shop_ID", Shop_ID)
+					.setParameter("Is_Active", Is_Active)
+					.getResultList();
+			
+			// check list is null or not if list is null then add or save the new device_id into database
+			// if list have the shop_id the update the device_id
+				
+				if((deviceIdList != null) && (deviceIdList.size() > 0)) {
+				//System.out.println(userAddress);
+					log.info("Enterring device token update method");
+					pushNotificationUpdate = deviceIdList.get(0);
+					pushNotificationUpdate.setDevice_ID(pushNotification.getDevice_ID());
+					pushNotificationUpdate.setIs_Active(Is_Active);
+					pushNotificationUpdate.setMessage_Body(pushNotification.getMessage_Body());
+					sessionFactory.getCurrentSession().update(pushNotificationUpdate);
+					sessionFactory.openSession().beginTransaction().commit();
+					log.info("Returring  device token update method");
+					return true;
+				}
+				else {
+					log.info("Enterring device token save method");
+					pushNotification.setIs_Active(true);
+					sessionFactory.getCurrentSession().save(pushNotification);
+					log.info("Returring  device token save method");
+					return true;
+				}
+			
+		}catch (RuntimeException re) {
+				log.error("get failed", re);
+				throw re;
+			} finally {
+				/*
+				 * if (sessionFactory != null) { sessionFactory.close(); }
+				 */
+			}
 	}
 
 

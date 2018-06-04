@@ -26,7 +26,7 @@ import com.backend.restapi.user.model.LoginResponse;
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @Controller
 @EnableWebMvc
-@RequestMapping("login")
+@RequestMapping("/login")
 public class LoginController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -54,7 +54,8 @@ public class LoginController {
 
 			    loginResponse.setStatus_code("200");
 				loginResponse.setStatus_message("Successfully");
-				logger.error("User name and password  found");
+				logger.debug("User name and password  found");
+				//logger.D("User name and password  found");
 				loginResponse.setData(userDetails);
 				return loginResponse;
 			}

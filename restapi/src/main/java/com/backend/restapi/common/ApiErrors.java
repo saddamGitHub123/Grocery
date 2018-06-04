@@ -2,6 +2,25 @@ package com.backend.restapi.common;
 
 public interface ApiErrors {
 	
+	// For User Message 
+	public static final String ERROR__ALREADY_EXIST = "Already Username or Phone number or Email exisit";
+	public static final String ERROR__EMPTY_SHOPKEEPER = "Shopkeeper List is Empty";
+	public static final String ERROR__EMPTY_USER = "User List is Empty";
+	public static final String ERROR__EMPTY_USER__SHOP = "Shop_ID and User_ID is empty";
+	public static final String SUCCESS__SHOPKEEPER_ADD = "Successfully Add ShopKeeper";
+	public static final String SUCCESS__USER_ADD = "Successfully Add User";
+	public static final String SUCCESS__USER_UPDATE = "Successfully Update User";
+	
+	public static final String ERROR__DATA__NOT_SAVE = "Data is not save";
+	
+	public static final String SUCCESS__AUTHENTICATED = "Successfully Authenticated";
+	
+	// Push Notification 
+	
+	public static final String SUCCESS__SAVE_DEVICE_TOKEN = "Successfully save and update device token";
+	public static final String ERROR__DEVICE_TOKEN = "ERROR!! Server not getting Device Token ";
+	
+	
 	//ORDER TABLE	
 	public static final String ERROR__ORDER_LIST_EMPTY = "Orderlist is empty";
 	

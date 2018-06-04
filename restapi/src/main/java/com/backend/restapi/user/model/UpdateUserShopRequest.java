@@ -3,7 +3,6 @@
  */
 package com.backend.restapi.user.model;
 
-import com.backend.restapi.common.SuccResponse;
 
 import com.backend.restapi.user.dto.User_Data;
 /**

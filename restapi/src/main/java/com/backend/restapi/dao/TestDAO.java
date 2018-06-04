@@ -12,5 +12,8 @@ import com.backend.restapi.user.dto.Test;
 public interface TestDAO {
 	
 	boolean addTest(Test test);
+	
+	
+	
 
 }

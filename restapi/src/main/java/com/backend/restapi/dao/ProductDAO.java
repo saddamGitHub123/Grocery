@@ -4,6 +4,9 @@
 package com.backend.restapi.dao;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import org.springframework.http.HttpEntity;
 
 import com.backend.restapi.product.dto.Product;
 import com.backend.restapi.product.model.Product_Model;
@@ -49,5 +52,12 @@ public interface ProductDAO {
          * ****/
         
        List< UniqueProduct> uniqueProductList();
+       
+       
+       
+       /**
+   	 * This is for push notification method 
+   	 * **/
+   	CompletableFuture<String> send (HttpEntity<String> entity);
 
 }

@@ -1,7 +1,12 @@
 package com.backend.restapi.dao;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
+import org.springframework.http.HttpEntity;
+
+import com.backend.restapi.user.dto.Pushnotification;
+import com.backend.restapi.user.dto.User;
 import com.backend.restapi.user.dto.User1;
 import com.backend.restapi.user.dto.UserAddress;
 import com.backend.restapi.user.dto.User_Data;
@@ -24,7 +29,7 @@ public interface UserDAO {
 	 * crete method for geting list of shopid for add shopkeeper into database
 	 * ***/
 	
-	 List<UserAddress> listOfShop(UserRequest userRequest);
+	 List<User> listOfShop(UserRequest userRequest);
 	
 	 
 	 /**
@@ -69,5 +74,21 @@ public interface UserDAO {
 	 * ***/
 	
 	List<User_Data> userDetailsByShopID(UpdateRequest updateRequest);
+	
+	
+	/**
+	 * This is for push notification method 
+	 * **/
+	CompletableFuture<String> send (HttpEntity<String> entity);
+	
+	
+	/*
+	 *  This method for the push notification
+	 *  saving device id using Shop_ID
+	 */
+	
+	boolean saveDeviceID(Pushnotification pushNotification);
+	
+	
 	
 }

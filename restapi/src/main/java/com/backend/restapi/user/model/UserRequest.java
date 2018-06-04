@@ -6,7 +6,6 @@ package com.backend.restapi.user.model;
 import com.backend.restapi.common.SuccResponse;
 import com.backend.restapi.user.dto.Address;
 import com.backend.restapi.user.dto.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author Sk Saddam Hosan
