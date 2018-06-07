@@ -27,7 +27,7 @@ public interface OrderDAO {
 	
 	// Add the order list using shopID and userID
 
-		boolean addOrderAndOrderID(OrderRequestAdd orderRequest);
+		String addOrderAndOrderID(OrderRequestAdd orderRequest);
 
 	// order list and user details by shopID
 	List<Ordered_List> userOrderListByShopId(String Shop_ID,String User_ID,boolean Dispatch);
@@ -54,5 +54,7 @@ public interface OrderDAO {
 	List<User> userPhoneNumber(DispatchRequest dispatchRequest);
 	
 
-
+	
+	//List of Order
+	List<Order> listOfOrder();
 }

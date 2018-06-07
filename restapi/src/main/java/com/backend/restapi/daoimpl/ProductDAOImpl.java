@@ -4,7 +4,9 @@
 package com.backend.restapi.daoimpl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import org.hibernate.SessionFactory;
@@ -142,6 +144,8 @@ private static final Logger log = LoggerFactory.getLogger(ProductDAOImpl.class);
 			  //save the Product value
 			  sessionFactory.getCurrentSession().persist(pro);
 			  
+			  
+			  
 			 // Price pri = new Price();
 			  
 			  List<String> items = product.getProduct_Price();
@@ -176,10 +180,13 @@ private static final Logger log = LoggerFactory.getLogger(ProductDAOImpl.class);
 				  pri = new Price(Product_ID,Shop_ID,items.get(i),unit.get(i),stock.get(i));
 					 // pri = new Price(Product_ID,Shop_ID,items.get(i),unit.get(i));
 				  sessionFactory.getCurrentSession().persist(pri);
+				  
 				  }
 				  
 			  }		  
 			  
+			//  sessionFactory.openSession().flush();
+			 // sessionFactory.openSession().beginTransaction().commit();
 			return true;
 			
 		}catch (RuntimeException re)
@@ -424,17 +431,27 @@ private static final Logger log = LoggerFactory.getLogger(ProductDAOImpl.class);
 		
 		UniqueProduct product;
 		Product uniqProduct;
+		
+		// Getting unique product details using product name
+		List<Product> listProduct = new ArrayList<>();
+		Set<Product> setProduct = new HashSet<>();
+		
 		Price pri;
-		List<Price> list = new ArrayList();
-		List<UniqueProduct> uniList = new ArrayList();
+		
+		List<UniqueProduct> uniList = new ArrayList<>();
 		try {
 
-			List<Product> listProduct = sessionFactory.getCurrentSession()
-					.createQuery("FROM Product GROUP BY Product_Name").getResultList();
+			List<Product> list = sessionFactory.getCurrentSession()
+					.createQuery("FROM Product").getResultList();
 			
 
 			System.out.println(listProduct);
 			
+			for(Product obj : list) {
+				if(setProduct.add(obj)) {
+					listProduct.add(obj);
+				}
+			}
 
 			if ((listProduct != null) && (listProduct.size() > 0)) {
 				// userFound= true;

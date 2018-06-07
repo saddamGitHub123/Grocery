@@ -18,11 +18,14 @@ public interface ApiErrors {
 	// Push Notification 
 	
 	public static final String SUCCESS__SAVE_DEVICE_TOKEN = "Successfully save and update device token";
-	public static final String ERROR__DEVICE_TOKEN = "ERROR!! Server not getting Device Token ";
+	public static final String FCM_SUCCESS__ADD_PRODUCT = " Add New Product into List ";
+	public static final String FCM_SUCCESS__ADD_ORDER = " Add New Order into List : ";
 	
+	public static final String ERROR__DEVICE_TOKEN = "ERROR!! Server not getting Device Token ";
 	
 	//ORDER TABLE	
 	public static final String ERROR__ORDER_LIST_EMPTY = "Orderlist is empty";
+	
 	
     public static final String ERROR__PHONE_CELL_MISSING = "Phone cell is missing";
     public static final String ERROR__EMAIL_MISSING = "Email Id is missing";

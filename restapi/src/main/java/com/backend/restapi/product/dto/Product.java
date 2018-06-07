@@ -192,6 +192,41 @@ public class Product implements Serializable{
 	public void setProduct_Active(boolean product_Active) {
 		Product_Active = product_Active;
 	}
+	
+	
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 * we used for getting unique value
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((Product_Name == null) ? 0 : Product_Name.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Product other = (Product) obj;
+		if (Product_Name == null) {
+			if (other.Product_Name != null)
+				return false;
+		} else if (!Product_Name.equals(other.Product_Name))
+			return false;
+		return true;
+	}
 	 
 	 
 	 

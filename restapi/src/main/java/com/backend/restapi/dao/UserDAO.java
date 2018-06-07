@@ -89,6 +89,6 @@ public interface UserDAO {
 	
 	boolean saveDeviceID(Pushnotification pushNotification);
 	
-	
+	boolean getDeviceID(String Shop_ID,String message);
 	
 }

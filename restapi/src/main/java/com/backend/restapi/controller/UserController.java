@@ -393,11 +393,14 @@ public class UserController {
 	/***
 	 * its send notification from server to one device or particular device
 	 * 
+	 * Finally It is working Using Andriod
 	 */
 	@RequestMapping(value = "/fcmNotification/oneToOne/device", method = RequestMethod.GET)
 	public String serverToOneDevice() throws Exception {
 
-		String userDeviceIdKey = "eHp6V2Wtr4I:APA91bFLHRuScumQB0lg4tPNStf-vFTGNy8RzHQHX72LiuYOuj546SpmfBZlZ6o5aJXvo0YsOwHc7MGwb7Dsx1er-FOqGHb0P0dvKSmcyhcufdPowhrtnNRmeirxu5kV2lUPDZ8SbZKz";
+		//String userDeviceIdKey = "egtbfsd8MCo:APA91bGEDXehUv8iDoJE9Mj802ESCLlAtZXhdqMgHUiLU9hbUn3B-lYdvqISCc-t3FLnxGfS0IrxLkr_yhMtSuu98r-jwWn7opDjuNLjVsJ7dPacVbbunHK9rX_AezwXnROLjMe3w7HL";
+		
+		String userDeviceIdKey ="fTiMENgaIAI:APA91bHdqOZEZHYlq34Aeve6_30WskJX1oBy56-kSTBh18usYArkr06tXXOIUjDDWBLo9ICLk5q5b0-4U4lo38AlJklTOm7yrMZIlu9LtaiGNqF1frefTyThDaFqyIiMaFnqgSUj-o3q";
 		// String authKey = AUTH_KEY_FCM; // You FCM AUTH key
 		// String FMCurl = "https://fcm.googleapis.com/fcm/send";
 		String FIREBASE_SERVER_KEY = "AIzaSyAuS9vJADBUEWM_pAQcgPDGR_GcNWP2knw"; // You FCM AUTH key
@@ -456,7 +459,7 @@ public class UserController {
 		notificationData.setTitle("Hello Firebase Push Notification");
 		notificationRequestModel.setData(notificationData);
 		notificationRequestModel.setTo(
-				"eHp6V2Wtr4I:APA91bFLHRuScumQB0lg4tPNStf-vFTGNy8RzHQHX72LiuYOuj546SpmfBZlZ6o5aJXvo0YsOwHc7MGwb7Dsx1er-FOqGHb0P0dvKSmcyhcufdPowhrtnNRmeirxu5kV2lUPDZ8SbZKz");
+				"d-uXK4cYxcs:APA91bGBmtBExzQQmbBf1tRu1g58QU0SVcYhY8pJRaBgEjwzimeXeO4GYCcryjR_Diq2B8bZIesqJ9lNtlRv5Oh8fR8Yu8rZ_JBh8BUnoXh7p9jhV9-GNhCfkDsr4HNROTtCqNkNWaX0");
 
 		Gson gson = new Gson();
 		Type type = new TypeToken<NotificationRequestModel>() {
@@ -466,7 +469,7 @@ public class UserController {
 
 		StringEntity input = new StringEntity(json);
 		input.setContentType("application/json");
-		postRequest.addHeader("Authorization", "key=AIzaSyAuS9vJADBUEWM_pAQcgPDGR_GcNWP2knw");
+		postRequest.addHeader("Authorization", "key=AIzaSyBSahQgns1tqT1RcXMOxlOb2MjxT3y00tc");
 		postRequest.setEntity(input);
 
 		System.out.println("reques:" + json);

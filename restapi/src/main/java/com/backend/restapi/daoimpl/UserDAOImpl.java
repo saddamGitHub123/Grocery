@@ -2,11 +2,17 @@ package com.backend.restapi.daoimpl;
 
 
 
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import org.hibernate.SessionFactory;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +20,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 
+import com.backend.restapi.common.ApiErrors;
+import com.backend.restapi.common.ApiUrl;
 import com.backend.restapi.dao.UserDAO;
 import com.backend.restapi.user.dto.Address;
 import com.backend.restapi.user.dto.HeaderRequestInterceptor;
@@ -59,17 +69,33 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public List<User> listOfShop(UserRequest userRequest) {
 		
+		
 	
 		log.debug("Inserting UserDAOImpl class of listOfShop() method");
 		
 		try {
 
+			
+			
 			if (userRequest.getShop_ID() == null || userRequest.getShop_ID().isEmpty()) {
-				String uniqueShopID = "from User where Shop_Count = :Shop_Count GROUP BY Shop_ID ";
-				List<User> list = sessionFactory.getCurrentSession().createQuery(uniqueShopID, User.class)
+				String uniqueShopID = "from User where Shop_Count = :Shop_Count";
+				List<User> allUserList = sessionFactory.getCurrentSession().createQuery(uniqueShopID, User.class)
 						// .setParameter("Shop_ID", Shop_ID)
 						.setParameter("Shop_Count", true).getResultList();
+				
+				// we declared set and new list for getting unique user details from database
+				// using override the  hashCode() and equals() method in User POJO class
+				
+				Set<User> uniqueSet = new HashSet<>();
+				List<User> list = new ArrayList<>();				
+				for(User obj:allUserList) {
+					if(uniqueSet.add(obj))
+						list.add(obj);
+				}
+				
 				System.out.println(list.size());
+				
+				
 				
 				if ((list != null) && (list.size() > 0)) {
 					//userFound= true;
@@ -152,7 +178,8 @@ public class UserDAOImpl implements UserDAO {
 				
 				System.out.println(userAddress);
 				sessionFactory.getCurrentSession().persist(userAddress);
-				
+				sessionFactory.openSession().flush();
+				sessionFactory.openSession().beginTransaction().commit();
 				return true;
 			}
 			else {
@@ -162,7 +189,8 @@ public class UserDAOImpl implements UserDAO {
 					address.getArea(), address.getCity(),address_Active);
 			
 			sessionFactory.getCurrentSession().persist(userAddress);
-			
+			sessionFactory.openSession().flush();
+			sessionFactory.openSession().beginTransaction().commit();
 
 			return true;
 			}
@@ -629,6 +657,85 @@ public User_Data userDetailByShopIdAndUserId(UpdateRequest updateRequest) {
 
 
 
+	/* (non-Javadoc)
+	 * @see com.backend.restapi.dao.UserDAO#getDeviceID(java.lang.String)
+	 */
+	@Override
+	public boolean getDeviceID(String Shop_ID,String message) {
+		// TODO Auto-generated method stub
+		log.info(" Enterring getDeviceID() method in UserDAOImpl class"); 
+		
+		String getDeviceIDList = "From Pushnotification where Shop_ID = :Shop_ID";
+		List<Pushnotification> listPushnotification = sessionFactory.getCurrentSession()
+														.createQuery(getDeviceIDList,Pushnotification.class)
+														.setParameter("Shop_ID", Shop_ID)
+														.getResultList();
+		
+		if(listPushnotification!= null && listPushnotification.size() > 0) {
+			
+			String userDeviceIdKey = listPushnotification.get(0).getDevice_ID();
+			try {
+				serverToOneDevice(userDeviceIdKey,message);
+				
+				return true;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			}
+			
+		}else {
+			return false;
+		}
+		
+		
+	}
+
+
+	/***
+	 * its send notification from server to one device or particular device
+	 * 
+	 * Finally It is working Using Andriod and web
+	 */
+	static void serverToOneDevice(String userDeviceIdKey,String message) throws Exception {
+
+		//String userDeviceIdKey = "egtbfsd8MCo:APA91bGEDXehUv8iDoJE9Mj802ESCLlAtZXhdqMgHUiLU9hbUn3B-lYdvqISCc-t3FLnxGfS0IrxLkr_yhMtSuu98r-jwWn7opDjuNLjVsJ7dPacVbbunHK9rX_AezwXnROLjMe3w7HL";
+		
+	//	String userDeviceIdKey ="fTiMENgaIAI:APA91bHdqOZEZHYlq34Aeve6_30WskJX1oBy56-kSTBh18usYArkr06tXXOIUjDDWBLo9ICLk5q5b0-4U4lo38AlJklTOm7yrMZIlu9LtaiGNqF1frefTyThDaFqyIiMaFnqgSUj-o3q";
+		// String authKey = AUTH_KEY_FCM; // You FCM AUTH key
+		// String FMCurl = "https://fcm.googleapis.com/fcm/send";
+	//	String FIREBASE_SERVER_KEY = "AIzaSyAuS9vJADBUEWM_pAQcgPDGR_GcNWP2knw"; // You FCM AUTH key
+		
+		//String FIREBASE_SERVER_KEY = ApiUrl.FCM__SERVER_KEY; 
+		//String FIREBASE_API_URL = "https://fcm.googleapis.com/fcm/send";
+
+		URL url = new URL(ApiUrl.FCM__API_URL);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		conn.setUseCaches(false);
+		conn.setDoInput(true);
+		conn.setDoOutput(true);
+
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Authorization", "key=" + ApiUrl.FCM__SERVER_KEY);
+		conn.setRequestProperty("Content-Type", "application/json");
+
+		JSONObject json = new JSONObject();
+		json.put("to", userDeviceIdKey.trim());
+		JSONObject info = new JSONObject();
+		info.put("title", "Notificatoin"); // Notification title
+		//info.put("body", "Add new Product"); // Notification body
+		info.put("body",message);
+		json.put("notification", info);
+
+		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+		wr.write(json.toString());
+		wr.flush();
+		conn.getInputStream();
+		System.out.println(conn);
+		System.out.println(json.toString());
+		//return null;
+	}
 	
 
 

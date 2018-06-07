@@ -3,6 +3,9 @@
  */
 package com.backend.restapi.controller;
 
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -102,7 +105,10 @@ public class ProductController {
 				// allProduct.setProductData(productData);
 				// productDAO.addProduct(productData);
 				if (productDAO.addProduct(productData)) {
-
+					
+					//Sending Push Notification  using FCM
+					userDAO.getDeviceID(allProductData.getShop_ID(), ApiErrors.FCM_SUCCESS__ADD_PRODUCT);
+					
 					allProduct.setProductData(productData);
 					allProduct.setStatus_code(JsonResponse.CODE__OK);
 					allProduct.setStatus_message(ApiErrors.SUCCESS__AUTHENTICATED);
@@ -127,6 +133,10 @@ public class ProductController {
 				// productList.add(productD);
 				if (productDAO.addProduct(productData)) {
 
+					// Here we have to write push notification code
+					
+					userDAO.getDeviceID(allProductData.getShop_ID(),ApiErrors.FCM_SUCCESS__ADD_PRODUCT);
+					
 					allProduct.setProductData(productData);
 					allProduct.setStatus_code(JsonResponse.CODE__OK);
 					allProduct.setStatus_message(ApiErrors.SUCCESS__AUTHENTICATED);
@@ -356,6 +366,47 @@ public class ProductController {
 		return new ResponseEntity<>("Push Notification ERROR!", HttpStatus.BAD_REQUEST);
 	}
 
-	
+	/***
+	 * Here we write the push notification method and code 
+	 * 
+	 * **/
+	public String serverToOneDevice() throws Exception {
+
+		//String userDeviceIdKey = "egtbfsd8MCo:APA91bGEDXehUv8iDoJE9Mj802ESCLlAtZXhdqMgHUiLU9hbUn3B-lYdvqISCc-t3FLnxGfS0IrxLkr_yhMtSuu98r-jwWn7opDjuNLjVsJ7dPacVbbunHK9rX_AezwXnROLjMe3w7HL";
+		
+		String userDeviceIdKey = "fk7oBlniDtA:APA91bEEvqqvpLhvGZuHLHgkZl8eaI6FcIGMa37ljIRltsUrgmDv86eTsPp7MzQ5EAlhI2Fz566E3jePiDx33iPP2UPW2Gc8mZRQQ8irj7BVXiJ2HhxPbNIEK8xwjkRhz1BG9rotmXlx";
+		
+		
+		// String authKey = AUTH_KEY_FCM; // You FCM AUTH key
+		// String FMCurl = "https://fcm.googleapis.com/fcm/send";
+		String FIREBASE_SERVER_KEY = "AIzaSyAuS9vJADBUEWM_pAQcgPDGR_GcNWP2knw"; // You FCM AUTH key
+		String FIREBASE_API_URL = "https://fcm.googleapis.com/fcm/send";
+
+		URL url = new URL(FIREBASE_API_URL);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		conn.setUseCaches(false);
+		conn.setDoInput(true);
+		conn.setDoOutput(true);
+
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Authorization", "key=" + FIREBASE_SERVER_KEY);
+		conn.setRequestProperty("Content-Type", "application/json");
+
+		JSONObject json = new JSONObject();
+		json.put("to", userDeviceIdKey.trim());
+		JSONObject info = new JSONObject();
+		info.put("title", "Notificatoin"); // Notification title
+		info.put("body", "Add new Product"); // Notification body
+		json.put("notification", info);
+
+		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+		wr.write(json.toString());
+		wr.flush();
+		conn.getInputStream();
+		System.out.println(conn);
+		System.out.println(json.toString());
+		return null;
+	}
 
 }

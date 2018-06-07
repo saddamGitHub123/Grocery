@@ -18,7 +18,7 @@ public class OrderRequestAdd {
     private double Total_Amount;
     
     public OrderRequestAdd() {
- 		 this.Order_ID ="OID "+ UUID.randomUUID().toString().substring(26).toUpperCase();
+ 		// this.Order_ID ="OID "+ UUID.randomUUID().toString().substring(26).toUpperCase();
     	//this.Order_ID ="OID"+ String.valueOf(sendOTP(8));
  	 }
     

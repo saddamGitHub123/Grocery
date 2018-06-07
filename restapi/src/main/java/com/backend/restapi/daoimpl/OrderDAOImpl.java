@@ -1,10 +1,14 @@
 package com.backend.restapi.daoimpl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.hibernate.SQLQuery;
+import javax.persistence.Query;
+
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +16,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.restapi.dao.OrderDAO;
-import com.backend.restapi.order.dto.GroupBy;
 import com.backend.restapi.order.dto.Order;
 import com.backend.restapi.order.model.DispatchRequest;
 import com.backend.restapi.order.model.OrderRequest;
@@ -92,7 +95,7 @@ public class OrderDAOImpl implements OrderDAO {
 	 * **/
 	
 	@Override
-	public boolean addOrderAndOrderID(OrderRequestAdd orderRequest) {
+	public String addOrderAndOrderID(OrderRequestAdd orderRequest) {
 		
 		try{
 		    log.debug("Add all the order list ");	
@@ -126,8 +129,11 @@ public class OrderDAOImpl implements OrderDAO {
 		    	
 		    	log.debug("Returing from the addOrderAndOrderID  method");
 		    }
-
-			return true;
+      System.out.println("the list of order"+order);
+  	System.out.println(orderRequest.getOrder_ID());
+      //  sessionFactory.openSession().flush();
+		//sessionFactory.openSession().beginTransaction().commit();
+		return orderRequest.getOrder_ID();
 			
 		}catch (RuntimeException re)
 		{
@@ -165,52 +171,52 @@ public class OrderDAOImpl implements OrderDAO {
 		    
 		   // int count = 0;
 		    List<Ordered_List> orderAddList = new ArrayList();
-		   // List<Order> userList = new ArrayList();;
 		    Address address =new Address();
 		    
-		    //getting userID List from user Table
-		    /*String selectUserByShopId = "from User where Shop_ID = :Shop_ID ";
-			
-		     List<User> userList = sessionFactory
-					.getCurrentSession()
-						.createQuery(selectUserByShopId, User.class)
-							.setParameter("Shop_ID", Shop_ID)
-								.getResultList();*/
+		    // This list of array and set are using getting unique list from database using hasCode() and 
+		    // equeals() in the Order model class
 		    
-		   // String selectUserByShopId = "from Order where Shop_ID = :Shop_ID "; 
+		    List<Order> userList = new ArrayList<>();
+			 Set<Order> uniqueSet = new HashSet<>();
+			 
+		    //getting userID List from user Table
+
 		    String selectUserByShopId = null;
+		    
 		    //getting unique order_id from order table
 			if(Dispatch == true && User_ID1 == null) {
 				
 				//this is return only active orderList
-		     selectUserByShopId = "from Order where Shop_ID = :Shop_ID AND Dispatch = :Dispatch GROUP BY Order_ID ";
+				selectUserByShopId = "from Order where Shop_ID = :Shop_ID AND Dispatch = :Dispatch ";
 
-		     //selectUserByShopId = " from Order where  Shop_ID = :Shop_ID AND Dispatch = :Dispatch";
-		     
-		     
-		     
-		    // "SELECT distinct Order_ID from orderList where Shop_ID = "Shop_0" AND Dispatch = true"
+
 			}
 			else if(Dispatch == false && User_ID1 == null)
 			{
 				//this is return dispatch orderList
-				selectUserByShopId = "from Order where Shop_ID = :Shop_ID AND Dispatch = :Dispatch GROUP BY Order_ID ";	
+				selectUserByShopId = "from Order where Shop_ID = :Shop_ID AND Dispatch = :Dispatch ";	
 			}
 			else {
 				
 				
 				//this is for particular user order details
 				String User_ID = User_ID1;
-				selectUserByShopId = "from Order where Shop_ID = :Shop_ID AND User_ID = :User_ID GROUP BY Order_ID ";
+				selectUserByShopId = "from Order where Shop_ID = :Shop_ID AND User_ID = :User_ID";
 				
-				   List<Order> userList = sessionFactory
+				   List<Order> allOrderList = sessionFactory
 							.getCurrentSession()
 								.createQuery(selectUserByShopId, Order.class)
 									.setParameter("Shop_ID", Shop_ID)
 									.setParameter("User_ID", User_ID)
 										.getResultList();
+				   
+				    for (Order obj : allOrderList) {
+				        if (uniqueSet.add(obj)) {
+				        	userList.add(obj);
+				        }
+				    }
 					
-				   if (userList == null) {
+				   if (userList.isEmpty()) {
 					   
 					   log.debug("Returrning empty order list"); 
 					   return orderAddList;
@@ -276,51 +282,30 @@ public class OrderDAOImpl implements OrderDAO {
 					     return orderAddList;
 			}
 			
-			
-			
-			// Testing for the group by
-			
-		//	String User_ID = "user_3";
-			
-			
-//			List<GroupBy> userList2  = sessionFactory
-//					.getCurrentSession().createNativeQuery(
-//				    "SELECT * FROM GroupBy",GroupBy.class )
-//				.getResultList();
-			
-//			List<GroupBy> userList2  = sessionFactory
-//					.getCurrentSession().createNativeQuery(
-//				    "SELECT DISTINCT L_Name FROM GroupBy where User_ID = :User_ID",GroupBy.class )
-//					.setParameter("User_ID", User_ID)
-//				.getResultList();
-//			
-//			System.out.println(userList2);
-//			
-//			String selectUserByShopIdw = "from GroupBy where User_ID = :User_ID  ";
-//			 List<GroupBy> userList1 = sessionFactory
-//						.getCurrentSession()
-//							.createQuery(selectUserByShopIdw, GroupBy.class)
-//								.setParameter("User_ID", User_ID)
-//									.getResultList();
-//			
-//			System.out.println(userList1);
-			
-			
-			
+
 
         //if dispatch will come true or false then run this part
 			
 			
-		     List<Order> userList = sessionFactory
+		     List<Order> allOrderList = sessionFactory
 					.getCurrentSession()
-						.createQuery(selectUserByShopId, Order.class)
+						.createQuery(selectUserByShopId,Order.class)
 							.setParameter("Shop_ID", Shop_ID)
 							.setParameter("Dispatch", Dispatch)
 								.getResultList();
-			
-		     System.out.println("Checking for distict :" +userList);
-		    // for (Order entity : userList) {
-		    
+		     /**
+		      *   It is used for getting unique list from List of object
+		      *   Using hashCode() and equals()
+		      * 
+		      * */			    
+			    for (Order obj : allOrderList) {
+			        if (uniqueSet.add(obj)) {
+			        	userList.add(obj);
+			        }
+			    }
+		     
+			 //   System.out.println(userList);
+		     
 
 			     for (int count = 0 ; count<userList.size();count++) {
 		    	 //getting userID from user table using shopID
@@ -545,20 +530,32 @@ public class OrderDAOImpl implements OrderDAO {
 		
 		List<OrderSizeModel> orderAddList = new ArrayList();
 		
+		// create new order list and order set for getting unique order list
+		List<Order> userList = new ArrayList<>();
+		Set<Order> userSet = new HashSet<>();
+		
 		OrderSizeModel orderSizeModel = null ;
 		
 		try{
 		    log.debug("Add all the order list ");	
 		    
 		    //getting unique orderList using shopid and userid
-			String selectUserByShopId = "from Order where Shop_ID = :Shop_ID AND User_ID = :User_ID GROUP BY Order_ID ";
+			String selectUserByShopId = "from Order where Shop_ID = :Shop_ID AND User_ID = :User_ID ";
 			
-			   List<Order> userList = sessionFactory
+			   List<Order> AllUserList = sessionFactory
 						.getCurrentSession()
 							.createQuery(selectUserByShopId, Order.class)
 								.setParameter("Shop_ID", Shop_ID)
 								.setParameter("User_ID", User_ID)
 									.getResultList();
+			   
+			   // getting unique orderlist from AllUserList 
+			   // Using hasHCode() and equals() 
+			   for(Order obj : AllUserList) {
+				   if(userSet.add(obj)) {
+					   userList.add(obj);
+				   }
+			   }
 			   
 			   System.out.println(userList.size());
 			   
@@ -663,6 +660,43 @@ public List<User> userPhoneNumber(DispatchRequest dispatchRequest) {
 							.getResultList();
 	    
 		return listUser;
+		
+	}catch (RuntimeException re)
+	{
+		log.error("Save product failed", re);
+		throw re;
+	}
+}
+
+
+
+
+/* (non-Javadoc)
+ * @see com.backend.restapi.dao.OrderDAO#listOfOrder()
+ */
+@Override
+public List<Order> listOfOrder() {
+	
+	List<Order> uniqueListOrder = new ArrayList<>();
+	Set<Order> uniqueSet = new HashSet<>();
+	log.debug("Enterring the listofOrder() method in OrderDAOImpl");
+	try {
+		String orderListQuery = "From Order";
+		List<Order> orderList = sessionFactory.getCurrentSession().createQuery(orderListQuery,Order.class)
+								.getResultList();
+		if(orderList != null && orderList.size() > 0) {
+			for(Order obj:orderList) {
+				if(uniqueSet.add(obj)) {
+					uniqueListOrder.add(obj);
+				}
+			}
+			
+			return uniqueListOrder;
+		}
+		else {
+			return null;
+		}
+		
 		
 	}catch (RuntimeException re)
 	{

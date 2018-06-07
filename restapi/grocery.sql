@@ -1,5 +1,5 @@
 CREATE DATABSE GROCERY;
-
+SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 DROP TABLE IF EXISTS `address`;
 DROP TABLE IF EXISTS `usershop_details`;
 CREATE TABLE `usershop_details` (
@@ -81,6 +81,11 @@ CREATE TABLE product_prices (
 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+
+
+/**
+ * for the orderlist table
+ * **/
 DROP TABLE IF EXISTS `orderList`;
 CREATE TABLE `orderList` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -98,7 +103,6 @@ CREATE TABLE `orderList` (
   `Order_Active` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
 
 
 

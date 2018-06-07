@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.backend.restapi.common.ApiErrors;
+import com.backend.restapi.common.ApiUrl;
 import com.backend.restapi.common.JsonResponse;
 import com.backend.restapi.common.SuccResponse;
 import com.backend.restapi.dao.OrderDAO;
+import com.backend.restapi.dao.UserDAO;
 import com.backend.restapi.order.dto.Order;
 import com.backend.restapi.order.model.DispatchRequest;
 import com.backend.restapi.order.model.OrderListResponse;
@@ -49,7 +51,8 @@ public class OrderController {
 	
 	@Autowired
 	   public OrderDAO orderDAO;
-	
+	@Autowired
+	public UserDAO userDAO;
 
 	/**
 	 * Add orderList using shopID and userID used by User
@@ -63,12 +66,28 @@ public class OrderController {
 		
 		try {
 
+			// For getting list of the Order
+			
+			List<Order> orderList = orderDAO.listOfOrder();
+			
+			System.out.println(orderList.size());
 			
 			//call the add order method
 			//if(orderDAO.addOrder(orderRequest)) {
-			if(orderDAO.addOrderAndOrderID(orderRequest)) {
+			String Order_ID = ApiUrl.ORDER__STRING + orderList.size();
 			
+			 orderRequest.setOrder_ID(Order_ID);			
+			String orderID = orderDAO.addOrderAndOrderID(orderRequest);
+			if(!orderID.isEmpty()) {
 			
+			/*
+			 * Add push notification using Shop_ID
+			 * **/
+				
+				//String me
+			
+				userDAO.getDeviceID(orderRequest.getShop_ID(),ApiErrors.FCM_SUCCESS__ADD_ORDER + orderID);
+				
 			
 			//response.setStatus_code(JsonResponse.CODE__OK);
 			//response.setStatus_message(JsonResponse.CODE__SUCCESS);
