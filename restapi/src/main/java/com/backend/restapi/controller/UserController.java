@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.backend.restapi.common.ApiErrors;
+import com.backend.restapi.common.ApiUrl;
 import com.backend.restapi.common.JsonResponse;
 import com.backend.restapi.common.SuccResponse;
 import com.backend.restapi.dao.UserDAO;
@@ -72,8 +73,8 @@ public class UserController {
 			// Address address = userRequest.getUserAddress();
 
 			// UserAddress userAddress= null;
-			String Shop = "Shop_";
-			String User = "User_";
+			//String Shop = "Shop_";
+			//String User = "User_";
 
 			/**
 			 * This is for ShopKeeper add the new Shopkeeper
@@ -110,12 +111,12 @@ public class UserController {
 
 				System.out.println(shopList.size());
 
-				userRequest.setShop_ID(Shop + (shopList.size()));
+				userRequest.setShop_ID(ApiUrl.SHOP__STRING + (shopList.size()));
 
 				// Add new Shopkeeper Details
 				if (userDAO.addShop(userRequest)) {
 
-					user.setShop_ID(Shop + (shopList.size()));
+					user.setShop_ID(ApiUrl.SHOP__STRING + (shopList.size()));
 					userRequest.setStatus_code(JsonResponse.CODE__OK);
 					userRequest.setStatus_message(ApiErrors.SUCCESS__SHOPKEEPER_ADD);
 					return userRequest;
@@ -140,10 +141,10 @@ public class UserController {
 				if (shopList.get(size - 1).getUser_ID() == null || shopList.size() == 0) {
 					System.out.println("1st user add");
 
-					user.setUser_ID(User + (size - 1));
+					user.setUser_ID(ApiUrl.USER__STRING + (size - 1));
 
 					if (userDAO.addShop(userRequest)) {
-						user.setUser_ID(User + (size - 1));
+						user.setUser_ID(ApiUrl.USER__STRING  + (size - 1));
 						userRequest.setStatus_code(JsonResponse.CODE__OK);
 						userRequest.setStatus_message(ApiErrors.SUCCESS__USER_ADD);
 						return userRequest;
@@ -158,9 +159,9 @@ public class UserController {
 				} else {
 					System.out.println("2nd or 3rd user add");
 
-					user.setUser_ID(User + (size - 1));
+					user.setUser_ID(ApiUrl.USER__STRING  + (size - 1));
 					if (userDAO.addShop(userRequest)) {
-						user.setUser_ID(User + (size - 1));
+						user.setUser_ID(ApiUrl.USER__STRING  + (size - 1));
 						userRequest.setStatus_code(JsonResponse.CODE__OK);
 						userRequest.setStatus_message(ApiErrors.SUCCESS__USER_ADD);
 						return userRequest;
@@ -241,8 +242,6 @@ public class UserController {
 
 				updateResponse.setStatus_code(JsonResponse.CODE__EMPTY);
 				updateResponse.setStatus_message(ApiErrors.ERROR__EMPTY_USER__SHOP);
-				// updateResponse.setRequest_Type("Product Is Not Exist ");
-				// allProduct.setProductData(updateData);
 				return updateResponse;
 			} else {
 				updateResponse.setStatus_code(JsonResponse.CODE__OK);
@@ -254,8 +253,6 @@ public class UserController {
 		} catch (Exception e) {
 			logger.error("listOfProductByShopId(): Error - " + e);
 			updateResponse.setStatus_code(JsonResponse.CODE__EMPTY);
-			// updateResponse.setStatus_message("Something wrong!!
-			// userDetailByShopIdAndUserId() in userDAOImpl");
 			updateResponse.setStatus_message(JsonResponse.CODE__ERROR);
 			return updateResponse;
 		}
@@ -272,7 +269,6 @@ public class UserController {
 
 		logger.info("Entered getUserDetails()  - one user details ");
 
-		// String shopid = updateRequest.getShop_ID();
 		UserDetailsResponse updateResponse = new UserDetailsResponse();
 
 		try {
@@ -283,8 +279,7 @@ public class UserController {
 
 				updateResponse.setStatus_code(JsonResponse.CODE__EMPTY);
 				updateResponse.setStatus_message(ApiErrors.ERROR__NO_USER_EXIST);
-				// updateResponse.setRequest_Type("Product Is Not Exist ");
-				// allProduct.setProductData(updateData);
+				logger.error("Returning updateUserList as a Empty");
 				return updateResponse;
 			}
 

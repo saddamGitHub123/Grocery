@@ -254,7 +254,7 @@ private static final Logger log = LoggerFactory.getLogger(ProductDAOImpl.class);
 				  List<String> Stock_value = productData.getStock_Value();
 				  
 				  System.out.println(priceList.size());
-				  Price pri;
+				  Price pri = null;
 				for(int i = 0 ;i< items.size();i++) {
 					pri = priceList.get(i);
 					
@@ -278,7 +278,7 @@ private static final Logger log = LoggerFactory.getLogger(ProductDAOImpl.class);
 					        .setParameter( "Product_ID", Product_ID )
 					        .executeUpdate();
 					
-					
+					System.out.println(updatedEntities);
 					
 					//int id = priceList.get(i).getID();
 					// pri = new Price(Product_ID, Shop_ID,items.get(i), unit.get(i));
@@ -323,7 +323,7 @@ private static final Logger log = LoggerFactory.getLogger(ProductDAOImpl.class);
 		Product uniqProduct;
 		Price pri;
 		//List<Price> list = new ArrayList();
-		List<UniqueProduct> uniList = new ArrayList();
+		List<UniqueProduct> uniList = new ArrayList<>();
 
 		try{
 			

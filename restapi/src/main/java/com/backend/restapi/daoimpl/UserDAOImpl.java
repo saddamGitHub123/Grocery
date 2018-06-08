@@ -1,6 +1,5 @@
 package com.backend.restapi.daoimpl;
-
-
+ 
 
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -20,11 +19,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
 import org.springframework.web.client.RestTemplate;
 
-import com.backend.restapi.common.ApiErrors;
+
 import com.backend.restapi.common.ApiUrl;
 import com.backend.restapi.dao.UserDAO;
 import com.backend.restapi.user.dto.Address;
@@ -497,7 +495,7 @@ public User_Data userDetailByShopIdAndUserId(UpdateRequest updateRequest) {
 			User_Data userData = new User_Data();
 			
 			// User_Data list of array content all userList
-			List<User_Data> userList = new ArrayList();
+			List<User_Data> userList = new ArrayList<>();
 
 			
 			// select the list of a user data using shopID in user table

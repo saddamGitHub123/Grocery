@@ -27,6 +27,26 @@ public interface ApiErrors {
 	public static final String ERROR__ORDER_LIST_EMPTY = "Orderlist is empty";
 	
 	
+	
+	// Login Controller
+	
+	public static final String SUCCESS__LOGIN = "Login Successfully Authenticate";
+	public static final String ERROR__LOGIN = "User Name and Password not found";
+	
+	
+	//Product Contrller
+	public static final String ERROR__SHOP_ID = "Shop_ID is empty";
+	public static final String ERROR__SHOP_ID_NOT_EXIST = "Shop_ID is not Exist";
+	public static final String ERROR__PRODUCT_ID_NOT_EXIST = "Product_ID is not Exist";
+	public static final String ERROR__PRODUCT_IS_NOT_EXIST = "Product is not Exist";
+	public static final String ERROR__PRODUCT_ID_EMPTY = "Product_ID is Empty";
+	public static final String ERROR__ADD_PRODUCT_NAME = "You have to Add Product Name";
+	public static final String ERROR__ADD_PRODUCT_TYPE = "Add First Product";
+	public static final String ERROR__ADD_NEW_PRODUCT = "Add New Product";
+	
+	public static final String SUCCESS__UPDATE_PRODUCTLIST = "Sucessfully Update Product List";
+	
+	
     public static final String ERROR__PHONE_CELL_MISSING = "Phone cell is missing";
     public static final String ERROR__EMAIL_MISSING = "Email Id is missing";
     public static final String ERROR__MISSING_PASSOWRD = "Password is missing";

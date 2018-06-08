@@ -84,13 +84,11 @@ public class OrderController {
 			 * Add push notification using Shop_ID
 			 * **/
 				
-				//String me
+				// Seding push notification using Device_ID
 			
 				userDAO.getDeviceID(orderRequest.getShop_ID(),ApiErrors.FCM_SUCCESS__ADD_ORDER + orderID);
 				
-			
-			//response.setStatus_code(JsonResponse.CODE__OK);
-			//response.setStatus_message(JsonResponse.CODE__SUCCESS);
+
 			response.setStatus_code(JsonResponse.CODE__OK);
 			response.setStatus_message(ApiErrors.SUCCESS__AUTHENTICATED);
 			return response;
@@ -337,6 +335,7 @@ public class OrderController {
 			orderSizeResponse = new OrderSizeResponse(orderSize);
 			orderSizeResponse.setStatus_code(JsonResponse.CODE__OK);
 			orderSizeResponse.setStatus_message(ApiErrors.SUCCESS__AUTHENTICATED);
+			logger.debug(" Returring orderSizeStructere() method"); 
 			return orderSizeResponse;
 	
 		

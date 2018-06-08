@@ -16,6 +16,15 @@ public interface ApiUrl {
 	//this is Firebase API URL 
 	public static final String FCM__API_URL = "https://fcm.googleapis.com/fcm/send";
 	
+	//Order
 	public static final String ORDER__STRING = "ORDER ";
-
+	
+	//User 
+	
+	public static final String SHOP__STRING = "Shop_";	
+	public static final String USER__STRING = "User_";
+	
+	// Product
+	
+	public static final String PRODUCT__STRING = "Product_";	
 }

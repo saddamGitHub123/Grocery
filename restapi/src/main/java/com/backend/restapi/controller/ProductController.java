@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.backend.restapi.common.ApiErrors;
+import com.backend.restapi.common.ApiUrl;
 import com.backend.restapi.common.JsonResponse;
 import com.backend.restapi.dao.ProductDAO;
 import com.backend.restapi.dao.UserDAO;
@@ -71,20 +72,20 @@ public class ProductController {
 		if (allProductData.getShop_ID() == null || allProductData.getShop_ID().isEmpty()) {
 			// ** no products exist, error message *//
 			allProduct.setStatus_code(JsonResponse.CODE__EMPTY);
-			allProduct.setStatus_message("shop_ID is empty");
+			allProduct.setStatus_message(ApiErrors.ERROR__SHOP_ID);
 			logger.error(ApiErrors.ERROR__NO_USER_ID_EXIST);
 			// allProduct.setProductData(null);
 			return allProduct;
 		}
 
-		String productName = "Product_";
+	//	String productName = "Product_";
 
 		try {
 
 			if (productData.getProduct_Name() == null) {
 				// ** no products exist, error message *//
 				allProduct.setStatus_code(JsonResponse.CODE__EMPTY);
-				allProduct.setStatus_message("You have to add Product Name");
+				allProduct.setStatus_message(ApiErrors.ERROR__ADD_PRODUCT_NAME);
 				logger.error(ApiErrors.ERROR__NO_USER_ID_EXIST);
 				// allProduct.setProductData(null);
 				return allProduct;
@@ -100,19 +101,19 @@ public class ProductController {
 				// ** no products exist, Add new product *//
 				productData.setShop_ID(allProductData.getShop_ID());
 
-				productData.setProduct_ID(productName + size);
+				productData.setProduct_ID(ApiUrl.PRODUCT__STRING + size);
 				productData.setAvailability(true);
 				// allProduct.setProductData(productData);
 				// productDAO.addProduct(productData);
 				if (productDAO.addProduct(productData)) {
 					
 					//Sending Push Notification  using FCM
-					userDAO.getDeviceID(allProductData.getShop_ID(), ApiErrors.FCM_SUCCESS__ADD_PRODUCT);
+				//	userDAO.getDeviceID(allProductData.getShop_ID(), ApiErrors.FCM_SUCCESS__ADD_PRODUCT);
 					
 					allProduct.setProductData(productData);
 					allProduct.setStatus_code(JsonResponse.CODE__OK);
 					allProduct.setStatus_message(ApiErrors.SUCCESS__AUTHENTICATED);
-					allProduct.setRequest_Type("Add_First_Product");
+					allProduct.setRequest_Type(ApiErrors.ERROR__ADD_PRODUCT_TYPE);
 					logger.info("Returning listOfProductByShopId()");
 					return allProduct;
 				} else {
@@ -128,7 +129,7 @@ public class ProductController {
 
 				productData.setShop_ID(allProductData.getShop_ID());
 
-				productData.setProduct_ID(productName + size);
+				productData.setProduct_ID(ApiUrl.PRODUCT__STRING + size);
 				productData.setAvailability(true);
 				// productList.add(productD);
 				if (productDAO.addProduct(productData)) {
@@ -140,7 +141,7 @@ public class ProductController {
 					allProduct.setProductData(productData);
 					allProduct.setStatus_code(JsonResponse.CODE__OK);
 					allProduct.setStatus_message(ApiErrors.SUCCESS__AUTHENTICATED);
-					allProduct.setRequest_Type("Add_New_Product");
+					allProduct.setRequest_Type(ApiErrors.ERROR__ADD_NEW_PRODUCT);
 					logger.info("Returning listOfProductByShopId()");
 					return allProduct;
 				} else {
@@ -186,8 +187,8 @@ public class ProductController {
 			
 			if(allProductData.getShop_ID() == null || checkProduct.getProduct_ID() == null ) {
 				allProduct.setStatus_code(JsonResponse.CODE__EMPTY);
-				allProduct.setStatus_message("CODE__ERROR");
-				allProduct.setRequest_Type("ShopId Is Not Exist ");
+				allProduct.setStatus_message(ApiErrors.ERROR__PRODUCT_ID_EMPTY);
+				allProduct.setRequest_Type(ApiErrors.ERROR__SHOP_ID_NOT_EXIST);
 				//allProduct.setProductData(updateData);
 				return allProduct;
 				
@@ -203,15 +204,15 @@ public class ProductController {
 			if (updateData == null) {
 
 				allProduct.setStatus_code(JsonResponse.CODE__EMPTY);
-				allProduct.setStatus_message("CODE__ERROR");
-				allProduct.setRequest_Type("Product Is Not Exist ");
+				allProduct.setStatus_message(ApiErrors.ERROR__PRODUCT_ID_NOT_EXIST);
+				allProduct.setRequest_Type(ApiErrors.ERROR__PRODUCT_IS_NOT_EXIST);
 				allProduct.setProductData(updateData);
 				return allProduct;
 			}
 
 			allProduct.setStatus_code(JsonResponse.CODE__OK);
-			allProduct.setStatus_message("Successfully Authenticated");
-			allProduct.setRequest_Type("Update_Product_List");
+			allProduct.setStatus_message(ApiErrors.SUCCESS__AUTHENTICATED);
+			allProduct.setRequest_Type(ApiErrors.SUCCESS__UPDATE_PRODUCTLIST);
 			allProduct.setProductData(updateData);
 
 			logger.info("Returning updateProductsList()");
@@ -268,7 +269,7 @@ public class ProductController {
 
 				// ** set status OK *//*
 				allProduct.setStatus_code(JsonResponse.CODE__OK);
-				allProduct.setStatus_message("Successfully Authenticated");
+				allProduct.setStatus_message(ApiErrors.SUCCESS__AUTHENTICATED);
 
 			} catch (Exception e) {
 				logger.error("listOfProductByShopId(): Error - " + e);
