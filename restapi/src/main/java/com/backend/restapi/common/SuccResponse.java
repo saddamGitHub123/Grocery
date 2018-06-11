@@ -3,13 +3,17 @@
  */
 package com.backend.restapi.common;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 /**
  * @author Sk Saddam Hosan
  *
  */
 public class SuccResponse {
 	
+	//@JsonView(JsonViewModel.SuccResponseModel.class) 
 	private String status_code;
+	//@JsonView(JsonViewModel.SuccResponseModel.class) 
 	private String status_message;
 	
 	

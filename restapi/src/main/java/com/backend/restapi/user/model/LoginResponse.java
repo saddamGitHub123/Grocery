@@ -3,8 +3,11 @@
  */
 package com.backend.restapi.user.model;
 
+import com.backend.restapi.common.JsonViewModel;
 import com.backend.restapi.common.SuccResponse;
 import com.backend.restapi.user.dto.User;
+import com.fasterxml.jackson.annotation.JsonView;
+
 
 /**
  * @author Sk Saddam Hosan
@@ -12,6 +15,7 @@ import com.backend.restapi.user.dto.User;
  */
 public class LoginResponse extends SuccResponse{
 	
+	//@JsonView(JsonViewModel.LoginView.class) 
 	public User Data;
 
 	/**

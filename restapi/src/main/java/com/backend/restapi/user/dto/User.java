@@ -9,7 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.backend.restapi.common.JsonViewModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
+
 
 @Entity
 @Table(name ="usershop_details")
@@ -23,15 +27,26 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int ID;
-	
+
+	//@JsonView(JsonViewModel.LoginView.class) 
 	private String Shop_ID;
+	
+	//@JsonView(JsonViewModel.LoginView.class) 
 	private String User_ID;
+
+	//@JsonView(JsonViewModel.LoginView.class) 
 	private String Name;
+	
 	private String User_Name;
 	private String User_Password;
+	
+	//@JsonView(JsonViewModel.LoginView.class) 
 	@Column(name="phn_number")
 	private String Contact;
+	
+	//@JsonView(JsonViewModel.LoginView.class) 
 	private String Email;
+	
 	private boolean Is_Active;
 	private boolean Shop_Count;
 	

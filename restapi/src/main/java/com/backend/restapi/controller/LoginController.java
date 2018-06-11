@@ -16,9 +16,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.backend.restapi.common.ApiErrors;
 import com.backend.restapi.common.JsonResponse;
+import com.backend.restapi.common.JsonViewModel;
 import com.backend.restapi.dao.LoginDAO;
 import com.backend.restapi.user.dto.User;
 import com.backend.restapi.user.model.LoginResponse;
+import com.fasterxml.jackson.annotation.JsonView;
+
 
 /**
  * @author Sk Saddam Hosan
@@ -28,7 +31,8 @@ import com.backend.restapi.user.model.LoginResponse;
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @Controller
 @EnableWebMvc
-@RequestMapping("/login")
+
+@RequestMapping("login")
 public class LoginController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -36,6 +40,7 @@ public class LoginController {
 	@Autowired
 	public LoginDAO loginDAO;
 	
+	// @JsonView(JsonViewModel.LoginView.class) 
 	@RequestMapping(value = "/user/shop", method = RequestMethod.POST)
 	public @ResponseBody LoginResponse loginUser(@RequestBody User loginuser) {
 
@@ -55,7 +60,7 @@ public class LoginController {
 			else {
 
 			    loginResponse.setStatus_code(JsonResponse.CODE__OK);
-				loginResponse.setStatus_message(ApiErrors.ERROR__LOGIN);
+				loginResponse.setStatus_message(ApiErrors.SUCCESS__LOGIN);
 				logger.debug("User name and password  found");
 				//logger.D("User name and password  found");
 				loginResponse.setData(userDetails);
